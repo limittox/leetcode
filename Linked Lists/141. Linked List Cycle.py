@@ -1,3 +1,10 @@
+"""
+Given a linked list, determine if it has a cycle in it.
+
+To represent a cycle in the given linked list, we use an integer pos which represents the position (0-indexed) in the linked list where tail connects to. 
+If pos is -1, then there is no cycle in the linked list.
+"""
+
 # Definition for singly-linked list.
 # class ListNode:
 #     def __init__(self, x):
@@ -6,17 +13,17 @@
 
 class Solution:
     def hasCycle(self, head: ListNode) -> bool:
-        slow, fast = head, head
+        if head is None:
+            return False
         
-        while slow != None:
-            if slow.next:
-                slow = slow.next
-            else:
-                break
-            if fast.next and fast.next.next:
-                fast = fast.next.next
-            else:
-                break
+        slow = head
+        fast = head.next
+        
+        while fast and fast.next and fast.next.next:
             if slow == fast:
                 return True
+            
+            slow = slow.next
+            fast = fast.next.next
+            
         return False
