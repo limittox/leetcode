@@ -54,8 +54,32 @@ class MinStack:
     def getMin(self) -> int:
         return self.data[-1][1]
         
+# Alternative solution for MinStack that uses a min element list to hold all of the 
+# minimum elems encountered so far.
+class MinStackWithMinElemList:
 
+    def __init__(self):
+        """
+        initialize your data structure here.
+        """
+        self.stack = []
+        self.minstack = []
 
+    def push(self, x: int) -> None:
+        self.stack.append(x)
+        if len(self.minstack) == 0 or self.minstack[-1] >= x:
+            self.minstack.append(x)
+
+    def pop(self) -> None:
+        num = self.stack.pop()
+        if num == self.minstack[-1]:
+            self.minstack.pop()
+
+    def top(self) -> int:
+        return self.stack[-1]
+
+    def getMin(self) -> int:
+        return self.minstack[-1]
 # Your MinStack object will be instantiated and called as such:
 # obj = MinStack()
 # obj.push(x)
