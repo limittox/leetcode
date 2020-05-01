@@ -1,0 +1,51 @@
+class Solution:
+    def orangesRotting(self, grid: List[List[int]]) -> int:
+        N = len(grid[0])
+        M = len(grid)
+        queue = []
+        
+        order = [(-1,0), (0,1), (1,0), (0,-1)]
+        
+        minute = -1
+        orange_count = 0
+        
+        for row in range(M):
+            for col in range(N):
+                if grid[row][col] == 2:
+                    queue.append([row, col, 0])
+                if grid[row][col] == 1:
+                    orange_count += 1
+
+        if not queue and orange_count:
+            return -1
+        elif queue:
+            queue[-1][2] = 1
+
+        while queue:
+            appended = False
+            curr = queue.pop(0)
+            
+            i, j, last = curr
+            
+            if last == 1:
+                minute += 1
+            
+            for c, mod in enumerate(order):
+                modi, modj = mod
+                row = i+modi
+                col = j+modj
+                
+                if not (row >= 0 and row < M and col >= 0 and col < N):
+                    continue
+                
+                if grid[row][col] == 1:
+                    appended = True
+                    grid[row][col] = 2
+                    orange_count -= 1
+                    queue.append([row, col, 0])
+                    
+            if queue and last == 1:
+                queue[-1][2] = 1
+                
+
+        return max(0,minute) if orange_count == 0 else -1
