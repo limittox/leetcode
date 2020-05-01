@@ -1,3 +1,7 @@
+"""
+
+"""
+
 class Solution:
     def orangesRotting(self, grid: List[List[int]]) -> int:
         N = len(grid[0])
