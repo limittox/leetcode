@@ -30,59 +30,39 @@ Explanation:  Since there are already no fresh oranges at minute 0, the answer i
 
 class Solution:
     def orangesRotting(self, grid: List[List[int]]) -> int:
-        # The length and widths of the grid
-        N = len(grid[0])
+        queue = collections.deque()
+        oranges = 0
         M = len(grid)
-        queue = []
+        N = len(grid[0])
         
-        # This is used later to more easily check the neighbouring grid squares
-        directions = [(-1,0), (0,1), (1,0), (0,-1)]
+        directions = ((-1,0), (0,-1), (1,0), (0,1))
+        for r in range(M):
+            for c in range(N):
+                if grid[r][c] == 1:
+                    oranges += 1
+                elif grid[r][c] == 2:
+                    queue.append((r,c))
+
+        queue.append((-1,-1))
         
-        minute = -1
-        orange_count = 0
-        
-        # Adding rotten oranges to queue and find the number of fresh orange on the grid
-        for row in range(M):
-            for col in range(N):
-                if grid[row][col] == 2:
-                    queue.append([row, col])
-                if grid[row][col] == 1:
-                    orange_count += 1
-
-
-        if not queue and orange_count:
-            return -1
-        elif queue: # This is to indicate when an iteration is over
-            queue.append([-1,-1])
-
-        # BFS
+        minutes = -1
         while queue:
-            curr = queue.pop(0)
+            r, c = queue.popleft()
             
-            i, j = curr
-            
-            # Add an indicator to the end to indicate another end of an iteration
-            if queue and i == -1:
-                queue.append([-1,-1])
-                
-            if i == -1:
-                minute += 1
+            if r == -1:
+                if queue:
+                    queue.append((-1,-1))
+                minutes += 1
                 continue
             
-            for c, mod in enumerate(directions):
-                modi, modj = mod
-                row = i+modi
-                col = j+modj
+            for dirr, dirc in directions:
+                modr = r+dirr
+                modc = c+dirc
                 
-                if not (row >= 0 and row < M and col >= 0 and col < N):
-                    continue
-                
-                if grid[row][col] == 1:
-                    grid[row][col] = 2
-                    orange_count -= 1
-                    queue.append([row, col])
-                    
-            
-                
-
-        return max(0,minute) if orange_count == 0 else -1
+                if modr >= 0 and modr < M and modc >=0 and modc < N:
+                    if grid[modr][modc] == 1:
+                        grid[modr][modc] = 2
+                        queue.append((modr,modc))
+                        oranges -= 1
+        
+        return minutes if oranges == 0 else -1
