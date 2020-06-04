@@ -68,3 +68,36 @@ class Solution:
                         
         helper(s, words, "")
         return res
+
+# Very similar way, without using a string for curr (might improve complexity)
+
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> List[str]:
+        wordDict = set(wordDict)
+        def isWordBreak(s):
+            dp = [False for i in range(len(s)+1)]
+            dp[0] = True
+            
+            for i in range(len(s)):
+                for j in range(len(s)+1):
+                    if dp[i] and s[i:j] in wordDict:
+                        dp[j] = True
+            
+            return dp[-1]
+        res = []
+        def dfs(s, curr):
+            if not s:
+                res.append(' '.join(curr[:]))
+                return
+            
+            if not isWordBreak(s):
+                return
+            
+            for i in range(1, len(s)+1):
+                if s[:i] in wordDict:
+                    curr.append(s[:i])
+                    dfs(s[i:], curr)
+                    curr.pop()
+        dfs(s, [])
+        
+        return res
