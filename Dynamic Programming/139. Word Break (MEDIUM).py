@@ -21,7 +21,84 @@ Example 3:
 Input: s = "catsandog", wordDict = ["cats", "dog", "sand", "and", "cat"]
 Output: false
 """
-#-------SOLUTION------
+#-------SOLUTION------#
+# Recursion
+# N is the length of the String s
+# Time: O(2^N) **TLE**
+# Space: O(N)
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        """
+        s = leetcode
+        wordDict = ["leet", "code"]
+        --> True
+        
+        s[0:4] == "leet"
+        s[4:8] == "code"
+        ___________________________________
+        s = "applepenapple"
+        wordDict = ["apple", "pen"]
+        --> True
+        ___________________________________
+        s = "catsandog"
+        wordDict = ["cats", "dog", "sand", "and", "cat"]
+        --> False
+        ___________________________________
+        s = "catsanddog"
+        wordDict = ["cats", "dog", "and", "cat"]
+        --> True
+        
+        dp = [False for i in range(len(s)+1)]
+        dp[0] = True
+        
+        [1,0,0,1,1,0,0,1,0,0,1]
+        
+        return dp[-1]
+        
+        """
+        wordDict = set(wordDict)
+        def backtrack(s):
+            if not s:
+                return True
+            
+            for i in range(1,len(s)+1):
+                if s[:i] in wordDict and backtrack(s[i:]):
+                    return True
+            
+            return False
+        
+        return backtrack(s)
+
+# Recursion with Memoization
+# N is the length of the String s
+# Time: O(N^2)
+# Space: O(N)
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        wordDict = set(wordDict)
+        memo = [-1 for i in range(len(s))]
+
+        def backtrack(start):
+            if start == len(s):
+                return True
+            
+            if memo[start] != -1:
+                return memo[start]
+            
+            for i in range(start+1,len(s)+1):
+                if s[start:i] in wordDict and (backtrack(i)):
+                    memo[start] = True
+                    return memo[start] 
+                
+            memo[start] = False
+            return memo[start]
+
+        return backtrack(0)
+
+# N is the length of the String s
+# Dynamic Programming
+# Time: O(N^2)
+# Space: O(N)
 class Solution:
     def wordBreak(self, s: str, wordDict: List[str]) -> bool:
         """
