@@ -33,3 +33,25 @@ class Solution:
                 end = i + lenMax//2
             
         return s[start:end+1]
+
+# Better pythonic solution
+# Time: O(N^2)
+# Space: O(1)
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        def checkPalindrome(l, r):
+            while l >= 0 and r < len(s) and s[l] == s[r]:
+                l -= 1
+                r += 1
+            
+            return s[l+1:r]
+        
+        maxPalinSub = ""
+        for i in range(len(s)):
+            palinSubOdd = checkPalindrome(i,i)
+            palinSubEven = checkPalindrome(i,i+1)
+
+            palinSub = palinSubOdd if len(palinSubOdd) > len(palinSubEven) else palinSubEven
+            maxPalinSub = maxPalinSub if len(maxPalinSub) > len(palinSub) else palinSub
+            
+        return maxPalinSub
